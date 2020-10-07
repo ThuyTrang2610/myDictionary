@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
 import java.net.URL;
@@ -16,10 +17,12 @@ public class Controller implements Initializable{
     public Button btSearch;
 
     @FXML
+    public Button btclear;
+    @FXML
     public TextField tfSearch;
 
     @FXML
-    public TextField tfHistory;
+    public TextArea tasuggest;
 
     @FXML
     public TextArea taMean;
@@ -27,9 +30,18 @@ public class Controller implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        btSearch.setOnMouseClicked(mouseEvent -> {
-            String tmp = tfSearch.getText();
-            taMean.setText(Main.dic.get(tmp));
+        btclear.setOnMouseClicked(mouseEvent -> {
+            tfSearch.clear();
         });
+
+        btSearch.setOnMouseClicked(this::handle);
+
+    }
+
+    public void handle(MouseEvent mouseEvent) {
+        tfSearch.clear();// xoa van ban
+        String tmp = tfSearch.getText();
+
     }
 }
+

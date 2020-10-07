@@ -14,14 +14,16 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Dictionary");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.setScene(new Scene(root, 400, 400));
         primaryStage.show();
     }
 
     public static TreeMap<String, String> dic = new TreeMap<String, String>();
     public static void main(String[] args) {
 
-        dic.put("hi", "chao");
+        dic.put("hi", "chào");
+        dic.put("high", "cao");
+        dic.put("highlight", "Điểm nổi bật");
         launch(args);
 
 
