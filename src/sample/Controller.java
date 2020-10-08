@@ -25,7 +25,7 @@ public class Controller implements Initializable{
     public TextField tfSearch;
 
     @FXML
-    public TextArea tasuggest;
+    public TextArea taHistory;
 
     @FXML
     public TextArea taMean;
@@ -46,10 +46,17 @@ public class Controller implements Initializable{
         });
 
         tfSearch.setContextMenu(cmSearch);
+
+        tfSearch.setContextMenu(cmSearch);
         tfSearch.setOnKeyTyped(keyEvent -> {
             String tmp = tfSearch.getText();
-            MenuItem a = new MenuItem(tmp);
-            cmSearch.getItems().add(a);
+            cmSearch.getItems().clear();
+            cmSearch.hide();
+            for (String key : Main.dic.keySet()) {
+                if (key.length() >= tmp.length() && key.substring(0, tmp.length()).equals(tmp)) {
+                    cmSearch.getItems().add(new MenuItem(key));
+                }
+            }
             cmSearch.show(tfSearch, Side.BOTTOM, 0, 0);
         });
     }
