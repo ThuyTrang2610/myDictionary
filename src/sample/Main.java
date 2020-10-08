@@ -14,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Dictionary");
-        primaryStage.setScene(new Scene(root, 400, 400));
+        primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
     }
 
@@ -24,6 +24,9 @@ public class Main extends Application {
         dic.put("hi", "chào");
         dic.put("high", "cao");
         dic.put("highlight", "Điểm nổi bật");
+        dic.put("hi1", "chào");
+        dic.put("high1", "cao");
+        dic.put("highlight1", "Điểm nổi bật");
         launch(args);
 
 
