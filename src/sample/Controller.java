@@ -7,6 +7,7 @@ import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -21,7 +22,7 @@ import java.util.Queue;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
-public class Controller implements Initializable{
+public class Controller implements Initializable {
     LinkedList<String> listHistory = new LinkedList<String>() {
     };
     @FXML
@@ -29,6 +30,9 @@ public class Controller implements Initializable{
 
     @FXML
     public Button btAdd;
+
+    @FXML
+    public Button btFix;
 
     @FXML
     public Button btClear;
@@ -47,11 +51,11 @@ public class Controller implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        //  TODO: nut xoa
         btClear.setOnMouseClicked(event -> {
             tfSearch.clear();
         });
-
+        //  TODO: Add tu
         btAdd.setOnMouseClicked(event -> {
             try {
                 Stage stage = new Stage();
@@ -60,48 +64,76 @@ public class Controller implements Initializable{
                 stage.setTitle("AddController");
                 stage.setScene(new Scene(root, 300, 100));
                 stage.show();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
 
             }
         });
+        // TODO: Fix tu
+        btFix.setOnMouseClicked(event -> {
+            try {
+                Stage stage = new Stage();
 
-       btSearch.setOnMouseClicked(event -> {
+                Parent root = FXMLLoader.load(getClass().getResource("fixWindow.fxml"));
+                stage.setTitle("FixWindow");
+                stage.setScene(new Scene(root, 300, 100));
+                stage.show();
+
+            } catch (Exception e) {
+
+            }
+        });
+        // TODO: NUT SEARCH
+        btSearch.setOnMouseClicked(event -> {
             String tmp = tfSearch.getText();
             taMean.setText(Main.dic.get(tmp));
         });
-
+        // TODO: Tim kiem tu
         tfSearch.setContextMenu(cmSearch);
 
-        tfSearch.setContextMenu(cmSearch);
-        tfSearch.setOnKeyTyped(keyEvent -> {
-
-            int d = 0;
+        tfSearch.setOnKeyPressed(keyEvent -> {
             String tmp = tfSearch.getText();
+
+
             cmSearch.getItems().clear();
             cmSearch.hide();
+
+            int d = 0;
+
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                taMean.setText(Main.dic.get(tmp));
+                listHistory.addFirst(tmp);
+                lvHistory.getItems().clear();
+                lvHistory.getItems().addAll(listHistory);
+            }
+
             for (String key : Main.dic.keySet()) {
                 if (key.length() >= tmp.length() && key.substring(0, tmp.length()).equals(tmp)) {
                     d++;
-                    if(d <= 5){
+                    if (d <= 5) {
                         cmSearch.getItems().add(new MenuItem(key));
                     }
                 }
             }
-            cmSearch.show(tfSearch, Side.BOTTOM, 0, 0);
-        });
 
+            cmSearch.show(tfSearch, Side.BOTTOM, 0, 0);
+
+        });
+        // TODO: reset moi khi click vao TfSearch
         tfSearch.setOnMouseClicked(event -> {
             tfSearch.clear();
         });
+        // TODO: in ra danh sach lich su tim kiem
         cmSearch.setOnAction(actionEvent -> {
             String s = ((MenuItem) actionEvent.getTarget()).getText();
             tfSearch.setText(s);
             taMean.setText(Main.dic.get(s));
             listHistory.addFirst(s);
             lvHistory.getItems().clear();
-
             lvHistory.getItems().addAll(listHistory);
+        });
+        lvHistory.setOnMouseClicked(event -> {
+            String s = lvHistory.getSelectionModel().getSelectedItem();
+            tfSearch.setText(s);
         });
     }
 
