@@ -26,7 +26,13 @@ import java.util.Queue;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
+import Dictionary.*;
+
 public class Controller implements Initializable {
+    Word activeWord = new Word();
+
+    WordManager wordManager = new WordManager();
+
     LinkedList<String> listHistory = new LinkedList<String>() {
     };
     @FXML
@@ -56,53 +62,57 @@ public class Controller implements Initializable {
     @FXML
     public ContextMenu cmSearch;
 
+    private void searchWord(String word) {
+        String definition = wordManager.getWordDefinition(word);
+        this.activeWord.setWord(word);
+        this.activeWord.setDefinition(definition);
+        taMean.setText(definition);
+        listHistory.addFirst(word);
+        lvHistory.getItems().clear();
+        lvHistory.getItems().addAll(listHistory);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //  TODO: nut xoa
-        btClear.setOnMouseClicked(event -> {
-            tfSearch.clear();
-        });
-        //  TODO: Add tu
+
+        // add word
         btAdd.setOnMouseClicked(event -> {
             try {
                 Stage stage = new Stage();
 
-                Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("../../resources/addWindow.fxml"));
+                Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("addWindow.fxml"));
                 stage.setTitle("AddController");
                 stage.setScene(new Scene(root, 300, 100));
                 stage.show();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        });
+
+        // change word definition
+        btFix.setOnMouseClicked(event -> {
+            try {
+                btFix.setDisable(true);
+
+                String newDefinition = taMean.getText();
+                wordManager.updateWordDefinition(activeWord.getWord(), newDefinition);
+                btFix.setDisable(false);
+
             } catch (Exception e) {
 
             }
         });
 
-        // TODO: Fix tu
-//        btFix.setOnMouseClicked(event -> {
-//            try {
-//                Stage stage = new Stage();
-//
-//                Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("../../resources/fixWindow.fxml"));
-//                stage.setTitle("FixWindow");
-//                stage.setScene(new Scene(root, 300, 100));
-//                stage.show();
-//
-//            } catch (Exception e) {
-//
-//            }
-//        });
-
-        // TODO: NUT SEARCH
         btSearch.setOnMouseClicked(event -> {
-            String tmp = tfSearch.getText();
-            taMean.setText(Main.dic.get(tmp));
+            String query = tfSearch.getText();
+            this.searchWord(query);
         });
 
-        // TODO: Tim kiem tu
+
         tfSearch.setContextMenu(cmSearch);
 
         tfSearch.setOnKeyPressed(keyEvent -> {
             String tmp = tfSearch.getText();
-
 
             cmSearch.getItems().clear();
             cmSearch.hide();
@@ -110,10 +120,7 @@ public class Controller implements Initializable {
             int d = 0;
 
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                taMean.setText(Main.dic.get(tmp));
-                listHistory.addFirst(tmp);
-                lvHistory.getItems().clear();
-                lvHistory.getItems().addAll(listHistory);
+                this.searchWord(tmp);
             }
 
             for (String key : Main.dic.keySet()) {
@@ -129,26 +136,17 @@ public class Controller implements Initializable {
 
         });
 
-        // TODO: reset moi khi click vao TfSearch
         tfSearch.setOnMouseClicked(event -> {
             tfSearch.clear();
-        });
-
-        // TODO: in ra danh sach lich su tim kiem
-        cmSearch.setOnAction(actionEvent -> {
-            String s = ((MenuItem) actionEvent.getTarget()).getText();
-            tfSearch.setText(s);
-            taMean.setText(Main.dic.get(s));
-            listHistory.addFirst(s);
-            lvHistory.getItems().clear();
-            lvHistory.getItems().addAll(listHistory);
+            taMean.clear();
+            activeWord.reset();
         });
 
         btVoice.setOnMouseClicked(event -> {
             try {
                 String old_text = btVoice.getText();
                 btVoice.setDisable(false);
-                GoogleUtilities.speak(taMean.getText(), "vi-VN", "tmp/output.mp3");
+                GoogleUtilities.speak(this.activeWord.getWord(), "en-GB", "output.mp3");
                 btVoice.setDisable(false);
                 btVoice.setText(old_text);
             } catch (Exception e) {
@@ -158,7 +156,7 @@ public class Controller implements Initializable {
 
         lvHistory.setOnMouseClicked(event -> {
             String s = lvHistory.getSelectionModel().getSelectedItem();
-            tfSearch.setText(s);
+            this.searchWord(s);
         });
     }
 

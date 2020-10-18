@@ -20,15 +20,6 @@ public class Main extends Application {
 
     public static TreeMap<String, String> dic = new TreeMap<String, String>();
     public static void main(String[] args) {
-
-        dic.put("hi", "chào");
-        dic.put("high", "cao");
-        dic.put("highlight", "Điểm nổi bật");
-        dic.put("hi1", "chào");
-        dic.put("high1", "cao");
-        dic.put("highlight1", "Điểm nổi bật");
         launch(args);
-
-
     }
 }
